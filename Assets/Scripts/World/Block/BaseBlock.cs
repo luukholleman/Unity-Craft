@@ -19,16 +19,22 @@ namespace Assets.Scripts.World.Block
 
         private GameObject _player;
 
-        public bool Surrounded { get { return _neighbours.Count() >= 26; } }
+        public bool Surrounded { get { return NeighbourCount >= 26; } }
 
-        //private BoxCollider _boxCollider;
-        //private MeshRenderer _meshRenderer;
+        public int NeighbourCount
+        {
+            get { return _neighbourCount; }
+        }
+
+        private BoxCollider _boxCollider;
+        private MeshRenderer _meshRenderer;
+        private int _neighbourCount;
 
         void Awake()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
-            //_boxCollider = GetComponent<BoxCollider>();
-            //_meshRenderer = GetComponent<MeshRenderer>();
+            _boxCollider = GetComponent<BoxCollider>();
+            _meshRenderer = GetComponent<MeshRenderer>();
         }
 
         void Start()
@@ -62,6 +68,14 @@ namespace Assets.Scripts.World.Block
             if (!_neighbours.Contains(block))
             {
                 _neighbours.Add(block);
+
+                _neighbourCount++;
+            }
+
+            if (Surrounded)
+            {
+                _meshRenderer.enabled = false;
+                _boxCollider.enabled = false;
             }
         }
     }

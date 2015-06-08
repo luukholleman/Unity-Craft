@@ -41,7 +41,7 @@ namespace Assets.Scripts.World
         {
             Vector3 localPos = _player.transform.InverseTransformPoint(transform.position);
 
-            if (Math.Max(Math.Abs(_player.transform.position.x - transform.position.x), Math.Abs(_player.transform.position.z - transform.position.z)) > World.ChunkSize * Settings.Instance.ViewDistance || localPos.z < 0)
+            if (Math.Max(Math.Abs(_player.transform.position.x - transform.position.x), Math.Abs(_player.transform.position.z - transform.position.z)) > World.ChunkSize * Settings.Instance.ViewDistance || localPos.z < -World.ChunkSize * 1.5f)
             {
                 DestroyBlocks();
             }
@@ -50,16 +50,6 @@ namespace Assets.Scripts.World
                 GenerateBlocks();
             }
         }
-        
-        //void OnBecameVisible()
-        //{
-        //    Debug.Log(string.Format("Visisble {0}, {1}", Location.x, Location.y));
-        //}
-
-        //void OnBecameInvisible()
-        //{
-        //    Debug.Log(string.Format("Invisisble {0}, {1}", Location.x, Location.y));
-        //}
 
         private void GenerateBlocks()
         {
@@ -76,13 +66,16 @@ namespace Assets.Scripts.World
 
                 AddBlock(newBlock);
 
-                for (int i = (int)newBlock.transform.position.y - 1; i >= (int)newBlock.transform.position.y - 3; i--)
+                for (int i = (int)newBlock.transform.position.y - 1; i >= (int)newBlock.transform.position.y - 2; i--)
                 {
                     GameObject bottomBlock = Instantiate(block, new Vector3(newBlock.transform.position.x, i, newBlock.transform.position.z), new Quaternion()) as GameObject;
 
                     bottomBlock.transform.parent = gameObject.transform;
 
                     AddBlock(bottomBlock);
+
+                    //if (bottomBlock.GetComponent<BaseBlock>().NeighbourCount > 3)
+                    //    break;
                 }
             }
 
